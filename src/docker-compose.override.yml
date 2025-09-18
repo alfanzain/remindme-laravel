@@ -6,8 +6,13 @@ services:
         condition: service_healthy
     volumes:
       - .:/var/www/html
+    working_dir: /var/www/html
     entrypoint: >
-      sh -c "php artisan migrate:fresh --force --seed"
+      sh -c "
+        php artisan jwt:secret &&
+        php artisan key:generate &&
+        php artisan migrate:fresh --force --seed
+      "
     networks:
       - sail
     restart: "no"
