@@ -1,32 +1,31 @@
 name: Test
-
-on:
+'on':
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
-    branches: [main]
-
+    branches:
+      - main
 jobs:
   test:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Install Docker
-        uses: docker/setup-buildx-action@v2
-
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install PHP dependencies
+        working-directory: ./src
+        run: composer install --prefer-dist --no-progress --no-interaction
       - name: Start Sail containers
         working-directory: ./src
         run: |
-          cp .env.example .env
+          cp -n .env.example .env
           ./vendor/bin/sail up -d
           ./vendor/bin/sail artisan jwt:secret
           ./vendor/bin/sail artisan key:generate
           ./vendor/bin/sail artisan migrate --force --seed
-
       - name: Run Tests
+        working-directory: ./src
         run: ./vendor/bin/sail test
-
       - name: Stop Sail
+        working-directory: ./src
         run: ./vendor/bin/sail down
