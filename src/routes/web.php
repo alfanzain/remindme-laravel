@@ -14,11 +14,21 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('login');
 });
 
-// Test
-Route::get('/test-email', function () {
-    $reminder = App\Models\Reminder::first();
-    return new App\Mail\ReminderMail($reminder);
+Route::get('/login', function () {
+    return view('login');
+})->name('login');
+
+Route::prefix('reminders')->group(function () {
+    Route::get('/', function () {
+        return view('reminders.list');
+    });
+    Route::get('/create', function () {
+        return view('reminders.create');
+    });
+    Route::get('/update', function () {
+        return view('reminders.update');
+    });
 });
