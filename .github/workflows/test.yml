@@ -58,7 +58,7 @@ jobs:
       env:
         DB_CONNECTION: sqlite
         DB_DATABASE: database/database.sqlite
-      run: php artisan test || exit 0
+      run: php artisan test
 
   test-mysql:
     runs-on: ubuntu-latest
@@ -126,4 +126,4 @@ jobs:
         DB_DATABASE: laravel_test
         DB_USERNAME: root
         DB_PASSWORD: password
-      run: php artisan test || exit 0
+      run: php artisan test
