@@ -116,7 +116,7 @@ jobs:
         DB_DATABASE: laravel_test
         DB_USERNAME: root
         DB_PASSWORD: password
-      run: php artisan migrate --force --seeder
+      run: php artisan migrate --force --seed
 
     - name: Execute tests with MySQL
       env:
