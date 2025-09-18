@@ -12,18 +12,7 @@ jobs:
     
     strategy:
       matrix:
-        # php-version: [8.1, 8.2, 8.3]
         php-version: [8.3]
-        
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: laravel_test
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     defaults:
       run:
@@ -38,7 +27,6 @@ jobs:
       with:
         php-version: ${{ matrix.php-version }}
         extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, pdo_mysql, bcmath, soap, intl, gd, exif, iconv
-        coverage: xdebug
 
     - name: Cache Composer packages
       id: composer-cache
@@ -50,8 +38,7 @@ jobs:
           ${{ runner.os }}-php-${{ matrix.php-version }}-
 
     - name: Install dependencies
-      run: |
-        composer install --prefer-dist --no-progress --no-suggest --no-interaction
+      run: composer install --prefer-dist --no-progress --no-interaction
 
     - name: Copy .env
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
@@ -110,8 +97,7 @@ jobs:
           ${{ runner.os }}-php-8.3-
 
     - name: Install dependencies
-      run: |
-        composer install --prefer-dist --no-progress --no-suggest --no-interaction
+      run: composer install --prefer-dist --no-progress --no-interaction
 
     - name: Copy .env
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
@@ -140,4 +126,4 @@ jobs:
         DB_DATABASE: laravel_test
         DB_USERNAME: root
         DB_PASSWORD: password
-      run: php artisan test 
+      run: php artisan test
