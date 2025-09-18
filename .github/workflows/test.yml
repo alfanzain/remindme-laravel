@@ -71,10 +71,10 @@ jobs:
       env:
         DB_CONNECTION: sqlite
         DB_DATABASE: database/database.sqlite
-      run: php artisan test
+      run: php artisan test --coverage-clover=coverage.xml
 
     - name: Upload coverage reports to Codecov
-      if: matrix.php-version == '8.2'
+      if: matrix.php-version == '8.3'
       uses: codecov/codecov-action@v3
       with:
         file: ./src/coverage.xml
@@ -148,34 +148,4 @@ jobs:
         DB_DATABASE: laravel_test
         DB_USERNAME: root
         DB_PASSWORD: password
-      run: php artisan test
-
-  code-quality:
-    runs-on: ubuntu-latest
-    
-    defaults:
-      run:
-        working-directory: ./src
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.3'
-        extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv
-
-    - name: Cache Composer packages
-      id: composer-cache
-      uses: actions/cache@v3
-      with:
-        path: src/vendor
-        key: ${{ runner.os }}-php-8.3-${{ hashFiles('src/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-php-8.3-
-
-    - name: Install dependencies
-      run: |
-        composer install --prefer-dist --no-progress --no-suggest --no-interaction
+      run: php artisan test --coverage-clover=coverage.xml
