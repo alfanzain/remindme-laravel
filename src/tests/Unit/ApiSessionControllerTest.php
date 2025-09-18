@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Http\Controllers\Api;
+namespace Tests\Unit;
 
 use App\Http\Controllers\Api\SessionController;
 use App\Services\SessionService;

@@ -7,7 +7,7 @@ services:
     volumes:
       - .:/var/www/html
     entrypoint: >
-      sh -c "php artisan migrate --force --seed"
+      sh -c "php artisan migrate:fresh --force --seed"
     networks:
       - sail
     restart: "no"

@@ -17,6 +17,8 @@ return new class extends Migration
             $table->text('description');
             $table->unsignedBigInteger('remind_at');
             $table->unsignedBigInteger('event_at');
+            // TODO: enum later
+            $table->string('status')->default('pending'); // pending, sent, failed
             $table->foreignId('created_by')->constrained('users');
             $table->timestamps();
         });

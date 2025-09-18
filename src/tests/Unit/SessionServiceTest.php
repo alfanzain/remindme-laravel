@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Services;
+namespace Tests\Unit;
 
 use Tests\TestCase;
 use App\Services\SessionService;
@@ -30,7 +30,7 @@ class SessionServiceTest extends TestCase
         parent::tearDown();
     }
 
-    public function login_with_valid_credentials_returns_user_and_tokens()
+    public function test_login_with_valid_credentials_returns_user_and_tokens()
     {
         $user = User::factory()->create([
             'email' => 'test@example.com',
@@ -77,7 +77,7 @@ class SessionServiceTest extends TestCase
         $this->assertEquals($mockRefreshToken, $result['refresh_token']);
     }
 
-    public function login_with_invalid_email_throws_exception()
+    public function test_login_with_invalid_email_throws_exception()
     {
         User::factory()->create([
             'email' => 'test@example.com',
@@ -88,7 +88,7 @@ class SessionServiceTest extends TestCase
         $this->sessionService->login('wrong@example.com', 'password123');
     }
 
-    public function login_with_invalid_password_throws_exception()
+    public function test_login_with_invalid_password_throws_exception()
     {
         User::factory()->create([
             'email' => 'test@example.com',
@@ -99,13 +99,13 @@ class SessionServiceTest extends TestCase
         $this->sessionService->login('test@example.com', 'wrongpassword');
     }
 
-    public function login_with_nonexistent_user_throws_exception()
+    public function test_login_with_nonexistent_user_throws_exception()
     {
         $this->expectException(InvalidCredentialException::class);
         $this->sessionService->login('nonexistent@example.com', 'password123');
     }
 
-    public function refresh_with_valid_refresh_token_returns_new_access_token()
+    public function test_refresh_with_valid_refresh_token_returns_new_access_token()
     {
         $user = User::factory()->create();
         $refreshToken = 'valid.refresh.token';
@@ -145,7 +145,7 @@ class SessionServiceTest extends TestCase
         $this->assertEquals($newAccessToken, $result['access_token']);
     }
 
-    public function refresh_with_access_token_throws_exception()
+    public function test_refresh_with_access_token_throws_exception()
     {
         $accessToken = 'access.token';
 
@@ -167,7 +167,7 @@ class SessionServiceTest extends TestCase
         $this->sessionService->refresh($accessToken);
     }
 
-    public function refresh_with_nonexistent_user_throws_exception()
+    public function test_refresh_with_nonexistent_user_throws_exception()
     {
         $refreshToken = 'valid.refresh.token';
         $nonExistentUserId = 99999;
@@ -193,7 +193,7 @@ class SessionServiceTest extends TestCase
         $this->sessionService->refresh($refreshToken);
     }
 
-    public function get_user_from_token_with_valid_token_returns_user()
+    public function test_get_user_from_token_with_valid_token_returns_user()
     {
         $user = User::factory()->create();
         $token = 'valid.token';
@@ -218,7 +218,7 @@ class SessionServiceTest extends TestCase
         $this->assertEquals($user->id, $result->id);
     }
 
-    public function get_user_from_token_with_invalid_token_returns_null()
+    public function test_get_user_from_token_with_invalid_token_returns_null()
     {
         $invalidToken = 'invalid.token';
 
@@ -236,7 +236,7 @@ class SessionServiceTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function get_user_from_token_with_nonexistent_user_returns_null()
+    public function test_get_user_from_token_with_nonexistent_user_returns_null()
     {
         $token = 'valid.token';
         $nonExistentUserId = 99999;
@@ -260,7 +260,7 @@ class SessionServiceTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function login_generates_tokens_with_correct_payload_structure()
+    public function test_login_generates_tokens_with_correct_payload_structure()
     {
         $user = User::factory()->create([
             'email' => 'test@example.com',
@@ -302,7 +302,7 @@ class SessionServiceTest extends TestCase
         $this->assertGreaterThan($accessPayload['exp'], $refreshPayload['exp']);
     }
 
-    public function refresh_generates_new_access_token_with_correct_payload()
+    public function test_refresh_generates_new_access_token_with_correct_payload()
     {
         // Arrange
         $user = User::factory()->create();
