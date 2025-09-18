@@ -71,15 +71,7 @@ jobs:
       env:
         DB_CONNECTION: sqlite
         DB_DATABASE: database/database.sqlite
-      run: php artisan test --coverage-clover=coverage.xml
-
-    - name: Upload coverage reports to Codecov
-      if: matrix.php-version == '8.3'
-      uses: codecov/codecov-action@v3
-      with:
-        file: ./src/coverage.xml
-        flags: unittests
-        name: codecov-umbrella
+      run: php artisan test
 
   test-mysql:
     runs-on: ubuntu-latest
@@ -148,4 +140,4 @@ jobs:
         DB_DATABASE: laravel_test
         DB_USERNAME: root
         DB_PASSWORD: password
-      run: php artisan test --coverage-clover=coverage.xml
+      run: php artisan test
