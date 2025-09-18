@@ -34,12 +34,16 @@ class Handler extends ExceptionHandler
     protected function unauthenticated($request, AuthenticationException $exception)
     {
         $token = $request->bearerToken();
-        $claims = JWTAuth::getJWTProvider()->decode($token);
 
-        if ($claims['type'] === 'refresh') {
-            return ClientError::invalidRefreshToken();
+        try {
+            $claims = JWTAuth::getJWTProvider()->decode($token);
+            if ($claims['type'] === 'refresh') {
+                return ClientError::invalidRefreshToken();
+            }
+            
+            return ClientError::invalidAccessToken();
+        } catch (\Throwable $e) {
+            return ClientError::invalidToken();
         }
-
-        return ClientError::invalidAccessToken();
     }
 }

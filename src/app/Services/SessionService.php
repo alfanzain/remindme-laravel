@@ -10,9 +10,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class SessionService
 {
     private const ACCESS_TOKEN_EXPIRATION = 20; // seconds
-    private const REFRESH_TOKEN_EXPIRATION = 60; // seconds (1 minute)
-    // private const ACCESS_TOKEN_EXPIRATION = 1;
-    // private const REFRESH_TOKEN_EXPIRATION = 5;
+    private const REFRESH_TOKEN_EXPIRATION = 600; // seconds (10 minutes)
 
     public function login(string $email, string $password): ?array
     {
