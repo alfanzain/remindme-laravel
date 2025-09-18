@@ -17,9 +17,11 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Start Sail containers
+        working-directory: ./src
         run: |
           cp .env.example .env
           ./vendor/bin/sail up -d
+          ./vendor/bin/sail artisan jwt:secret
           ./vendor/bin/sail artisan key:generate
           ./vendor/bin/sail artisan migrate --force --seed
 
