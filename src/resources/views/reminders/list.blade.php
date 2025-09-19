@@ -135,8 +135,7 @@ async function loadReminders() {
         const data = await res.json();
 
         if (!data.ok && data.err === "ERR_INVALID_ACCESS_TOKEN") {
-            refreshAndRetry(loadReminders);
-            return;
+            return refreshAndRetry(() => loadReminders());
         }
 
         reminders = data.data || data;
@@ -206,8 +205,7 @@ async function updateReminder(id, payload) {
         const data = await res.json();
 
         if (!data.ok && data.err === "ERR_INVALID_ACCESS_TOKEN") {
-            refreshAndRetry(updateReminder);
-            return;
+            return refreshAndRetry(() => updateReminder(id, payload));
         }
 
         closeModal();
@@ -227,6 +225,12 @@ function formatDate(ts) {
     const hh = String(date.getHours()).padStart(2, '0'); // 24-hour
     const min = String(date.getMinutes()).padStart(2, '0');
     return `${dd}/${mm}/${yy} ${hh}:${min}`;
+}
+
+function formatForDateTimeLocal(ts) {
+    const d = new Date(ts * 1000);
+    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    return d.toISOString().slice(0,16);
 }
 
 function render() {
@@ -306,8 +310,8 @@ function editReminder(i) {
     titleInput.value = r.title;
     descriptionInput.value = r.description;
 
-    remindInput.value = new Date(r.remind_at * 1000).toISOString().slice(0,16);
-    eventInput.value  = new Date(r.event_at * 1000).toISOString().slice(0,16);
+    remindInput.value = formatForDateTimeLocal(r.remind_at);
+    eventInput.value  = formatForDateTimeLocal(r.event_at);
 
     idInput.value = r.id;
     openModal(true);
@@ -317,17 +321,18 @@ async function deleteReminder(i) {
     const r = reminders[i];
     if (!confirm('Are you sure you want to delete this reminder?')) return;
     try {
-        await fetch(`${API_BASE}/${r.id}`, {
+        const res = await fetch(`${API_BASE}/reminders/${r.id}`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${accessToken}` }
         });
 
+        const data = await res.json();
+
         if (!data.ok && data.err === "ERR_INVALID_ACCESS_TOKEN") {
-            refreshAndRetry(deleteReminder(i));
-            return;
+            return refreshAndRetry(() => deleteReminder(i));
         }
 
-        showToast('Reminder deleted!', 'red');
+        showToast('Reminder deleted!');
         await loadReminders();
     } catch (err) {
         showToast('Delete failed', 'red');

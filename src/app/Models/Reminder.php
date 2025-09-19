@@ -36,4 +36,10 @@ class Reminder extends Model
     {
         return $this->belongsTo(User::class, 'created_by', 'id');
     }
+
+    public function getEventAtLocalAttribute()
+    {
+        return \Carbon\Carbon::createFromTimestampUTC($this->event_at)
+            ->setTimezone(config('app.timezone'));
+    }
 }

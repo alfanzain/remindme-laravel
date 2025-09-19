@@ -41,7 +41,7 @@
         <p>{{ $reminder->description }}</p>
 
         <h3>Event Date:</h3>
-        <p>{{ date('Y-m-d H:i:s', $reminder->event_at) }}</p>
+        <p>{{ $reminder->event_at_local->format('Y-m-d H:i') }}</p>
     </div>
     
     <div class="footer">
